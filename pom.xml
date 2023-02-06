@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.2</version>
+		<artifactId>spring-boot-starter-parent</artifactId> <!-- Aqui que vem o SpringBoot como parent da criação deste pom.xml -->
+		<version>3.0.2</version> <!-- versão do springBoot -->
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>med.voll</groupId>
