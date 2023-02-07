@@ -21,7 +21,7 @@ public class MedicoController {
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
     public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
-        respository.save(new Medico(dados));
+        respository.save(new Medico(dados)); // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
     }
 }
 

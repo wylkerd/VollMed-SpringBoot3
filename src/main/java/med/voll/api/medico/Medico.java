@@ -28,7 +28,7 @@ public class Medico {
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
 
-    @Embedded // Classes sepradas porém no banco fará parte da mesma tabela
+    @Embedded  // Classes sepradas porém no banco serão integradas na mesma tabela. Indica que a Classe Endereco vem de outro lugar
     private Endereco endereco;
 
     // Construtor que recebe parâmetro do tipo Dados DadosCadastroMedico
