@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import jakarta.validation.Valid;
 import med.voll.api.medico.DadosCadastroMedico;
 import med.voll.api.medico.Medico;
 import med.voll.api.medico.MedicoRepository;
@@ -19,7 +20,7 @@ public class MedicoController {
 
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
-    public void cadastrar(@RequestBody DadosCadastroMedico dados) {
+    public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
         respository.save(new Medico(dados));
     }
 }
