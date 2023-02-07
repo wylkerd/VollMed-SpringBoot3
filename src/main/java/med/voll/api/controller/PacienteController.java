@@ -19,7 +19,7 @@ public class PacienteController {
     private PacienteRepository repository;
 
     @PostMapping
-    @Transactional // Para realização de inserções no Banco de Dados
+    @Transactional // Para realização de inserções no Banco de Dados. Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
     public void cadastrar(@RequestBody @Valid DadosCadastroPaciente dados) {
         repository.save(new Paciente(dados)); // Pressionar ALT + Enter, para criar construtor de Paciente que recebe DadosCadastroPaciente
     }
