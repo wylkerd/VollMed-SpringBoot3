@@ -6,6 +6,8 @@ import med.voll.api.medico.DadosListagemMedico;
 import med.voll.api.medico.Medico;
 import med.voll.api.medico.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +23,31 @@ public class MedicoController {
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
     public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
-        respository.save(new Medico(dados)); // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
+        // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
+
+        respository.save(new Medico(dados));
     }
 
     @GetMapping
-    public List<DadosListagemMedico> listar() {
+    public Page<DadosListagemMedico> listar(Pageable paginacao) {
         // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico
-        return respository.findAll().stream().map(DadosListagemMedico::new).toList(); // Lembrar de criar construtor no DTO
+        // Lembrar de criar construtor no DTO
+        // Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
+
+        // Já devolve um Page do DTO automaticamente
+        // url da requisição http://localhost:8080/medicos?size=1&page=2
+
+        return respository.findAll(paginacao).map(DadosListagemMedico::new);
     }
+
+    /*
+        @GetMapping
+        public List<DadosListagemMedico> listarSemPaginacao() {
+            // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico
+            // Lembrar de criar construtor no DTO
+            return respository.findAll().stream().map(DadosListagemMedico::new).toList();
+        }
+     */
 
 }
 
