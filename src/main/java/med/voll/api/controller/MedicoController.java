@@ -8,6 +8,7 @@ import med.voll.api.medico.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +30,13 @@ public class MedicoController {
     }
 
     @GetMapping
-    public Page<DadosListagemMedico> listar(Pageable paginacao) {
+    public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico
         // Lembrar de criar construtor no DTO
         // Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
 
         // Já devolve um Page do DTO automaticamente
-        // url da requisição http://localhost:8080/medicos?size=1&page=2
+        // url da requisição exemplo http://localhost:8080/medicos?size=1&page=2&sort=nome,desc
 
         return respository.findAll(paginacao).map(DadosListagemMedico::new);
     }
