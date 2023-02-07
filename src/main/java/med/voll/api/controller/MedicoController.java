@@ -22,4 +22,4 @@ public class MedicoController {
 // @RequestBody indica que o parâmetro virá do corpo da requisição, o Body no formato JSON.
 
 // ALT + ENTER -> Create record 'DadosCadastroMedico'. Record é como uma Classe java, porém imutável, proporcionando um código menos verboso
-// (sem necessidade de Getters e Setters, por exemplo) se comparado a uma Classe, é um recurso das versões mais recentes.
+// (sem necessidade de Getters, equals, hashCode e toString por exemplo) se comparado a uma Classe, é um recurso das versões mais recentes.
