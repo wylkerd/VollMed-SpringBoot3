@@ -1,0 +1,1 @@
+ALTER TABLE pacientes RENAME COLUMN logradouro TO logadouro;
