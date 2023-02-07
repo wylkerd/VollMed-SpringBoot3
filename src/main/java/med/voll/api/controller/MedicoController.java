@@ -1,10 +1,7 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.medico.DadosCadastroMedico;
-import med.voll.api.medico.DadosListagemMedico;
-import med.voll.api.medico.Medico;
-import med.voll.api.medico.MedicoRepository;
+import med.voll.api.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +38,22 @@ public class MedicoController {
         return respository.findAll(paginacao).map(DadosListagemMedico::new);
     }
 
-    /*
+    @PutMapping
+    @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
+
+        // 1- Carrega o registro atual no banco de dados pelo id
+        // 2 - Sobrescreve os atributos baseados nos novos campos que chegaram no DTO e pronto!
+
+        // Se carregar uma entidade do BD e mudar algum atributo...
+        // a JPA já faz automaticamente o update dos atributos ao finalizar a Transaction
+
+        var medico = respository.getReferenceById(dados.id());
+        medico.atualizarInformacoes(dados); // ALT + Enter Create method, vai criar um método na Classe Medico
+
+    }
+
+    /*  // Lista de Medicos sem paginação
         @GetMapping
         public List<DadosListagemMedico> listarSemPaginacao() {
             // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico
