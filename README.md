@@ -9,3 +9,12 @@
 ### Como gerar um novo projeto com Spring Initializr
 #### * SpringBoot tem o servidor Tomcat embutido por padrão para execução da aplicação
 <img src="./SpringInitializer_configurcao_SpringBoot3.png"/>
+
+### Como adicionar novas dependencias?
+1. Acessar Spring Initializr e selecionar as dependecias que deseja (Dependencias que adicionamos para Validação e Persistencia de dados: Validation, MySQL Driver, Spring Data JPA e Flyway Migration) https://start.spring.io/
+2. Após selecionar as dependencias, certifique de que é um PROJETO MAVEN, clicar em 'EXPLORE' e copiar as dependencias que foram inclusas no pom.xml. 
+3. Colar as dependencias copiadas no projeto, no arquivo pom.xml
+4. Na aba 'Maven' no canto superior direito do Inttellij, clique em reload, para que seja feito o download das dependencias, pare o projeto e rode-o novamente.
+
+<img src="./adicionando_dependencias.png"/>
+<img src="./copiando_deps.png"/>
