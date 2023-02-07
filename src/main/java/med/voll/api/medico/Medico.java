@@ -30,4 +30,12 @@ public class Medico {
     @Embedded // Classes sepradas porém no banco fará parte da mesma tabela
     private Endereco endereco;
 
+    // Construtor que recebe parâmetro do tipo Dados DadosCadastroMedico
+    public Medico(DadosCadastroMedico dados) {
+        this.nome = dados.nome();
+        this.email = dados.email();
+        this.crm = dados.crm();
+        this.especialidade = dados.especialidade();
+        this.endereco = new Endereco(dados.endereco());
+    }
 }

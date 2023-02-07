@@ -1,6 +1,9 @@
 package med.voll.api.controller;
 
 import med.voll.api.medico.DadosCadastroMedico;
+import med.voll.api.medico.Medico;
+import med.voll.api.medico.MedicoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("medicos") // nomeando a URL
 public class MedicoController {
 
+    // Autowired: Annotation para Injeção de Dependencia, para criar este objeto e passar ao controller automaticamente
+    @Autowired
+    private MedicoRepository respository;  // Injetando o Repository como sendo um atriburo do Controller, denominado repository com tipo MedicoRepository
+
     @PostMapping
     public void cadastrar(@RequestBody DadosCadastroMedico dados) {
-        // atalho escrito 'sout'
-        System.out.println(dados);
-
+        respository.save(new Medico(dados));
     }
 }
 
