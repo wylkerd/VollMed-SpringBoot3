@@ -1,10 +1,8 @@
-package med.voll.api.medico;
+package med.voll.api.domain.medico;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 // Repository
 // Interface que extende Spring JPARepository, este recurso do Spring faz o mesmo papel do antigo DAO, porém com mais facilidade e simplicidade, tudo automaticamente.

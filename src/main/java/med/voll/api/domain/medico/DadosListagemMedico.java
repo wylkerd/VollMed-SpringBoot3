@@ -1,4 +1,4 @@
-package med.voll.api.medico;
+package med.voll.api.domain.medico;
 
 // DTO record, para retorno da listagem de médicos apenas com nome, email, crm e especialidade
 public record DadosListagemMedico(Long id, String nome, String email, String crm, Especialidade especialidade) {
