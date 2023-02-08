@@ -30,9 +30,11 @@ public class Medico {
 
     @Embedded  // Classes sepradas porém no banco serão integradas na mesma tabela. Indica que a Classe Endereco vem de outro lugar
     private Endereco endereco;
+    private Boolean ativo;
 
     // Construtor que recebe parâmetro do tipo Dados DadosCadastroMedico
     public Medico(DadosCadastroMedico dados) {
+        this.ativo = true;
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
@@ -55,5 +57,9 @@ public class Medico {
             this.endereco.atualizarInformacoes(dados.endereco()); // ALT + Enter Create method, vai criar um método na Classe Endereco
         }
 
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
