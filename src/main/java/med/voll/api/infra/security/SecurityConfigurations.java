@@ -11,19 +11,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Anotação para indicar personalização nas configurações de segurança
 public class SecurityConfigurations {
 
-    // Configuração para aplicar processo de autenticação STATELESS
-    // Spring HttpSecurity prove métodos de configurações para o Security e permite criar um objeto Security
-    // throw Exception na assinatura do método, para lançar a Exception caso tenha uma.
     @Bean // Serve para expor o retorno deste método ao Spring, para que devolva um objeto oo Spring automaticamente, Controller ou Classe Service
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*
         * 1 - Desabilitando proteção contra ataques Cross-Site Request Forgery (CSRF), pois iremos utilizar JWT Token, que faz a proteção deste ataque
         * 2 - sessionManagement() configura a autenticação para ser STATELESS (por padrão vem como stateful)
         * */
-
         return http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().build();
     }
 
 }
+
+/* Configuração para aplicar processo de autenticação STATELESS
+ Spring HttpSecurity prove métodos de configurações para o Security e permite criar um objeto SecurityFilterChain
+ throw Exception na assinatura do método, para lançar a Exception caso tenha uma. */
