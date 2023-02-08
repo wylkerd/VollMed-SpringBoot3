@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.domain.endereco.Endereco;
 
+// Mapeamento da Entidade JPA
 @Getter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor

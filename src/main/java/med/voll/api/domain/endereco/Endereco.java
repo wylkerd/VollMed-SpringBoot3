@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 // Mapeamento de ENTIDADE JPA
-
 @Embeddable
 @Getter
 @NoArgsConstructor // Exigencia do Data JPA
