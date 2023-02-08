@@ -26,6 +26,7 @@ public class MedicoController {
         respository.save(new Medico(dados));
     }
 
+    // Recebe PARÂMETROS de QUERY do Pageable, utilizados nos metódos GET do HTTP
     @GetMapping
     public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico
@@ -51,6 +52,14 @@ public class MedicoController {
         var medico = respository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados); // ALT + Enter Create method, vai criar um método na Classe Medico
 
+    }
+    
+    // Recebe parâmetro da URL, como complemento dela, utilizado no método DELETE
+    // @PathVariable para indicar que está pegando aquele mesmo parâmetro dinâmico da url
+    @DeleteMapping("/{id}")
+    @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
+    public void excluir(@PathVariable Long id) {
+        respository.deleteById(id);
     }
 
     /*  // Lista de Medicos sem paginação
