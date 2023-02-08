@@ -77,6 +77,12 @@ public class MedicoController {
         return ResponseEntity.noContent().build(); // NoContent devolve o código 204, usado no HTTP para exclusões. build() constrói um objeto Response Entity.
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var medico = respository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
+    }
+
     /* // Exclusão Física padrão do registro na base
 
         // Recebe parâmetro da URL, como complemento dela, utilizado no método DELETE
