@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -21,10 +22,17 @@ public class MedicoController {
 
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
         // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
+        var medico = new Medico(dados);
+        respository.save(medico);
 
-        respository.save(new Medico(dados));
+        // O próprio Spring já passa a uri sendo utilizada atuomaticamente ao inserir UriComponentsBuilder como parâmetro do método
+        // Exemplo: http://localhost:8080
+        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
+
+        // HTTP 201: Devolve o DTO do corpo da requisição criado e cabeçalho com o Location de captura do registro que foi salvo, fica disponível no Header.
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
     }
 
     // Recebe PARÂMETROS de QUERY do Pageable, utilizados nos metódos GET do HTTP
