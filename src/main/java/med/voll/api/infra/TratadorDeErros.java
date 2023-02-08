@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class TratadorDeErros {
 
-    // Indicação de qual erro este método vai tratar, neste caso Entity not found, passando de 500 para 404 Not Found
+    // Indicação de qual erro este método vai tratar, neste caso Entity NOT FOUND, passando de 500 para 404 Not Found
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity tratarErro404() {
         return ResponseEntity.notFound().build();

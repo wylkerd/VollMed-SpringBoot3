@@ -13,18 +13,18 @@ public record DadosCadastroMedico(
 
         @NotBlank // apenas para validar Strings
         String nome,
-        @NotBlank
-        @Email
+        @NotBlank(message = "{email.obrigatorio}") // mensagem vinda de src/main/resources/ValidationMessages.properties
+        @Email(message = "{email.invalido}")
         String email,
-        @NotBlank
+        @NotBlank(message = "{telefone.obrigatorio}")
         String telefone,
-        @NotBlank
-        @Pattern(regexp = "\\d{4,6}") // de 4 a 6 digitos para crm
+        @NotBlank(message = "CRM deve ter de 4 a 6 dígitos")
+        @Pattern(regexp = "\\d{4,6}")
         String crm,
         @NotNull
         Especialidade especialidade,
         // @Valid valida as anotações de outro DTO que está presente
-        @NotNull @Valid DadosEndereco endereco) {
+        @NotNull(message = "Dados do endereço são obrigatórios") @Valid DadosEndereco endereco) {
 }
 
 // ------------ COMENTÁRIOS ----------------- //
