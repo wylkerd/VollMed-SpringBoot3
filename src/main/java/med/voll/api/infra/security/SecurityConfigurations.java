@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Anotação para indicar personalização nas configurações de segurança
 public class SecurityConfigurations {
 
-    @Bean // Serve para expor o retorno deste método ao Spring, para que devolva um objeto oo Spring automaticamente, Controller ou Classe Service
+    @Bean // Serve para expor o retorno deste método ao Spring, para que devolva um objeto com esta configuração oo Spring automaticamente, Controller ou Classe Service
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*
         * 1 - Desabilitando proteção contra ataques Cross-Site Request Forgery (CSRF), pois iremos utilizar JWT Token, que faz a proteção deste ataque
