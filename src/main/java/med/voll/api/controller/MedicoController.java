@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class MedicoController {
 
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
-    public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
         // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
 
         respository.save(new Medico(dados));
@@ -28,7 +29,7 @@ public class MedicoController {
 
     // Recebe PARÂMETROS de QUERY do Pageable, utilizados nos metódos GET do HTTP
     @GetMapping
-    public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+    public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         // transformando uma lista de Medicos em uma lista do Dto DadosListagemMedico
         // Lembrar de criar construtor no DTO que recebe um Medico
         // Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
@@ -38,12 +39,13 @@ public class MedicoController {
         // return respository.findAll(paginacao).map(DadosListagemMedico::new);
 
         // De acordo com a nomenclatura do método o JPA já cria a implementação lógica dele automaticamente
-        return respository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new); // ALT + Enter Create method
+        var page =  respository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new); // ALT + Enter Create method
+        return ResponseEntity.ok(page); // HTTP 200 / Get
     }
 
     @PutMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
 
         // 1- Carrega o registro atual no banco de dados pelo id
         // 2 - Sobrescreve os atributos baseados nos novos campos que chegaram no DTO e pronto!
@@ -54,14 +56,17 @@ public class MedicoController {
         var medico = respository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados); // ALT + Enter Create method, vai criar um método na Classe Medico
 
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico)); // ALT + Enter create record, para criar o DTO
     }
 
     // Exclusão Lógica do registro na base
     @DeleteMapping("/{id}")
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         var medico = respository.getReferenceById(id);
         medico.excluir(); // ALT + Enter Create method
+
+        return ResponseEntity.noContent().build(); // NoContent devolve o código 204, usado no HTTP para exclusões. build() constrói um objeto Response Entity.
     }
 
     /* // Exclusão Física padrão do registro na base
