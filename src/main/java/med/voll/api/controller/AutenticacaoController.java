@@ -26,12 +26,12 @@ public class AutenticacaoController {
         que utilizaremos a instancia do AuthenticationManager (do próprio Spring) para ele criar o objeto
      */
     @Autowired
-    private AuthenticationManager manager;
+    private AuthenticationManager manager; // Dispara o processo de autentiação, que chama a AutenticacaoService, que chama o Repository para acessar o banco, devolve 403 ou 200 caso exista
 
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) { // ALT + Enter create record
 
-        var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
+        var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha()); // Criando DTO do Spring Security através do nosso DTO
         var authentication = manager.authenticate(token); // Devolve um objeto que representa um usuário logado no sistema, se houver (aqui Spring encontrou AutenticacaoService e chamou o UsuarioRepository).
 
         return ResponseEntity.ok().build();

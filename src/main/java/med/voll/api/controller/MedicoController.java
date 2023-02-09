@@ -40,7 +40,7 @@ public class MedicoController {
     // Recebe PARÂMETROS de QUERY do Pageable, utilizados nos metódos GET do HTTP
     @GetMapping
     public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        // transformando uma lista de Medicos em uma lista do Dto DadosListagemMedico
+        // Transformando uma lista de Medicos em uma lista do Dto DadosListagemMedico
         // Lembrar de criar construtor no DTO que recebe um Medico
         // Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
 
@@ -110,11 +110,14 @@ public class MedicoController {
 }
 
 // ------------ COMENTÁRIOS ----------------- //
-// @RequestBody indica que o parâmetro virá do corpo da requisição, o Body no formato JSON.
+/*
+1 - @RequestBody indica que o parâmetro virá do corpo da requisição, o Body no formato JSON.
 
-// ALT + ENTER -> Create record 'DadosCadastroMedico'. Record é como uma Classe java, porém imutável, proporcionando um código menos verboso
-// (sem necessidade de Getters, equals, hashCode e toString por exemplo) se comparado a uma Classe, é um recurso das versões mais recentes.
+2 - Tudo que entra e tudo que sai deve ter um DTO (record)
 
-// Annotation RestController para que o Spring carregue esta Classe como uma controller, ao iniciar o projeto
+3 - ALT + ENTER -> Create record 'DadosCadastroMedico'. Record é como uma Classe java, porém imutável, proporcionando um código menos verboso
+    (sem necessidade de Getters, equals, hashCode e toString por exemplo) se comparado a uma Classe, é um recurso das versões mais recentes.
 
-// Injetando o Repository como sendo um atriburo do Controller, denominado repository com tipo MedicoRepository
+4 - Annotation RestController para que o Spring carregue esta Classe como uma controller, ao iniciar o projeto
+
+5 - Injetando o Repository como sendo um atriburo do Controller, denominado repository com tipo MedicoRepository */
