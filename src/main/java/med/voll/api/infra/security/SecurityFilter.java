@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,18 +26,25 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter { // ALT + Enter implement methods de OncePerRequestFilter
 
+    @Autowired
+    private TokenService tokenService;
+
     /* Este é o método que o Spring vai chamar quando este filtro for executado */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var tokenJWT = recuperarToken(request);
+        var tokenJWT = recuperarToken(request); // ALT + Enter create method, para recuperação do token aqui
+        var subject = tokenService.getSubject(tokenJWT); // Fazendo a verificação do Token JWT no tokenService, se chegar o subject aqui, é por que o token está válido
 
-        // NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO, SE NÃO TIVER OUTRO ELE CHAMA O CONTROLLER CORRESPONDENTE
+        
+
+        // * NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO, SE NÃO TIVER OUTRO ELE CHAMA O CONTROLLER CORRESPONDENTE
         filterChain.doFilter(request, response);
     }
 
-    // Passamos aqui no método a request e ele nos devolve a String  do token
     private String recuperarToken(HttpServletRequest request) {
-        var authorizationHeader = request.getHeader("Authorization"); // vai pegar o valor da várial Authorization que veio no Header da request
+        /* Passamos neste método a request, e ele nos devolve a String do token que está no cabeçalho
+        Vai pegar o valor da váriavel Authorization que veio no Header da request */
+        var authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null) {
             throw new RuntimeException("Token JWT não enviado no cabeçalho Authorization!");
         }
