@@ -2,6 +2,8 @@ package med.voll.api.controller;
 
 import jakarta.validation.Valid;
 import med.voll.api.domain.usuario.DadosAutenticacao;
+import med.voll.api.domain.usuario.Usuario;
+import med.voll.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,12 +30,14 @@ public class AutenticacaoController {
     @Autowired
     private AuthenticationManager manager; // Dispara o processo de autentiação, que chama a AutenticacaoService, que chama o Repository para acessar o banco, devolve 403 ou 200 caso exista
 
+    @Autowired
+    private TokenService tokenService; // Injetando o objeto da Classe de Serviço do Token que criamos
+
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) { // ALT + Enter create record
-
         var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha()); // Criando DTO do Spring Security através do nosso DTO
         var authentication = manager.authenticate(token); // Devolve um objeto que representa um usuário logado no sistema, se houver (aqui Spring encontrou AutenticacaoService e chamou o UsuarioRepository).
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(tokenService.gerarToken((Usuario) authentication.getPrincipal())); // getPrincipal() para pegar o usuário logado / ALT + Enter Cast Usuário pois estava devolvendo um object
     }
 }
