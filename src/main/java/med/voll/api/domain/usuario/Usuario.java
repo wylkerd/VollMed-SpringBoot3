@@ -41,7 +41,7 @@ public class Usuario implements UserDetails { // ALT + Enter Implement Methods
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /* Este método serve para o controle de perfis de acesso. Nesta aplicação não
+        /* Este método serve para o controle de perfis de acesso ( AUTORIZAÇÃO ). Nesta aplicação não
         teremos este controle, então vamos simular uma Coleção de perfis, pois o Spring nos obriga a isso.
 
         * Indicando ao Spring que o perfil deste Usuario é apenas um, ele é fixo e se chama ROLE_USER   */
