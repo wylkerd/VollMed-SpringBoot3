@@ -1,0 +1,1 @@
+alter table medicos modify especialidade varchar(100) not null;

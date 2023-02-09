@@ -25,30 +25,35 @@ public class MedicoController {
     @PostMapping
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
-        // Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico
+        /* Pressionar ALT + Enter, para criar construtor de Medico que recebe DadosCadastroMedico */
+
         var medico = new Medico(dados);
         respository.save(medico);
 
-        // O próprio Spring já passa a uri sendo utilizada atuomaticamente ao inserir UriComponentsBuilder como parâmetro do método
-        // Exemplo: http://localhost:8080
+        /*
+            O próprio Spring já passa a uri sendo utilizada atuomaticamente ao inserir UriComponentsBuilder como parâmetro do método
+            Exemplo: http://localhost:8080
+        */
+
         var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
 
-        // HTTP 201: Devolve o DTO do corpo da requisição criado e cabeçalho com o Location de captura do registro que foi salvo, fica disponível no Header.
+        /* HTTP 201: Devolve o DTO do corpo da requisição criado e cabeçalho com o Location de captura do registro que foi salvo, fica disponível no Header. */
         return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
     }
 
     // Recebe PARÂMETROS de QUERY do Pageable, utilizados nos metódos GET do HTTP
     @GetMapping
     public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        // Transformando uma lista de Medicos em uma lista do Dto DadosListagemMedico
-        // Lembrar de criar construtor no DTO que recebe um Medico
-        // Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
+        /* Transformando uma lista de Medicos em uma lista do Dto DadosListagemMedico
+           Lembrar de criar construtor no DTO que recebe um Medico
+           Spring JPA Repository do findAll() tem uma sobrecarga para receber um Pageable como parâmetro para paginação automatica
+        */
 
-        // Já devolve um Page do DTO automaticamente
-        // url da requisição exemplo http://localhost:8080/medicos?size=1&page=2&sort=nome,desc
-        // return respository.findAll(paginacao).map(DadosListagemMedico::new);
+        /* Já devolve um Page do DTO automaticamente. URL da requisição exemplo http://localhost:8080/medicos?size=1&page=2&sort=nome,desc
+                return respository.findAll(paginacao).map(DadosListagemMedico::new);
+           * De acordo com a nomenclatura do método o JPA já cria a implementação lógica dele automaticamente
+        */
 
-        // De acordo com a nomenclatura do método o JPA já cria a implementação lógica dele automaticamente
         var page =  respository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new); // ALT + Enter Create method
         return ResponseEntity.ok(page); // HTTP 200 / Get
     }
@@ -57,11 +62,13 @@ public class MedicoController {
     @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
     public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
 
-        // 1- Carrega o registro atual no banco de dados pelo id
-        // 2 - Sobrescreve os atributos baseados nos novos campos que chegaram no DTO e pronto!
+        /*
+            1- Carrega o registro atual no banco de dados pelo id
+            2 - Sobrescreve os atributos baseados nos novos campos que chegaram no DTO e pronto!
 
-        // Se carregar uma entidade do BD e mudar algum atributo...
-        // a JPA já faz automaticamente o update dos atributos ao finalizar a Transaction
+            Se carregar uma entidade do BD e mudar algum atributo...
+            a JPA já faz automaticamente o update dos atributos ao finalizar a Transaction
+        */
 
         var medico = respository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados); // ALT + Enter Create method, vai criar um método na Classe Medico
@@ -85,10 +92,11 @@ public class MedicoController {
         return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
     }
 
-    /* // Exclusão Física padrão do registro na base
+    /*
+        * Exclusão Física padrão do registro na base!
 
-        // Recebe parâmetro da URL, como complemento dela, utilizado no método DELETE
-        // @PathVariable para indicar que está pegando aquele mesmo parâmetro dinâmico da url
+        * Recebe parâmetro da URL, como complemento dela, utilizado no método DELETE
+        * @PathVariable para indicar que está pegando aquele mesmo parâmetro dinâmico da url
 
         @DeleteMapping("/{id}")
         @Transactional // Como este é um método de escrita no BD, é necessário ter uma transação ativa com o Banco de Dados
@@ -98,7 +106,9 @@ public class MedicoController {
     */
 
 
-    /*  // Lista de Medicos sem paginação
+    /*
+        * Lista de Medicos sem paginação!
+
         @GetMapping
         public List<DadosListagemMedico> listarSemPaginacao() {
             // transformando um lista de Medicos em uma lista do Dto DadosListagemMedico

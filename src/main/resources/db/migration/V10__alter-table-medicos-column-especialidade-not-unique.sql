@@ -1,0 +1,1 @@
+alter table medicos DROP INDEX especialidade;
