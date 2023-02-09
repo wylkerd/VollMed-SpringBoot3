@@ -40,7 +40,19 @@ public class TokenService {
 
     /*
     * Poderiamos gerar o token passando mais informações por meio da adição de withClaim()
-    * withClaim() pode ser chamado várias vezes para adicionar informações ao token chave:valor
-    * .withClaim("id", usuario.getId()) por exemplo
+    * Por exemplo, podemos incluir o id do usuário no token:
+
+        * return JWT.create()
+            .withIssuer("API Voll.med")
+            .withSubject(usuario.getLogin())
+
+            .withClaim("id", usuario.getId())
+
+            .withExpiresAt(dataExpiracao())
+            .sign(algoritmo);
+
+    * O método withClaim recebe dois parâmetros, sendo o primeiro uma String que identifica o
+        nome do claim (propriedade armazenada no token), e o segundo a informação que se deseja armazenar.
+    * withClaim() pode ser chamado várias vezes
     * */
 }
