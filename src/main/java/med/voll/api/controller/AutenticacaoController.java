@@ -3,6 +3,7 @@ package med.voll.api.controller;
 import jakarta.validation.Valid;
 import med.voll.api.domain.usuario.DadosAutenticacao;
 import med.voll.api.domain.usuario.Usuario;
+import med.voll.api.infra.security.DadosTokenJWT;
 import med.voll.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,11 @@ public class AutenticacaoController {
 
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) { // ALT + Enter create record
-        var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha()); // Criando DTO do Spring Security através do nosso DTO
-        var authentication = manager.authenticate(token); // Devolve um objeto que representa um usuário logado no sistema, se houver (aqui Spring encontrou AutenticacaoService e chamou o UsuarioRepository).
+        var autenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha()); // Criando DTO do Spring Security através do nosso DTO
+        var authentication = manager.authenticate(autenticationToken); // Devolve um objeto que representa um usuário logado no sistema, se houver (aqui Spring encontrou AutenticacaoService e chamou o UsuarioRepository).
 
-        return ResponseEntity.ok(tokenService.gerarToken((Usuario) authentication.getPrincipal())); // getPrincipal() para pegar o usuário logado / ALT + Enter Cast Usuário pois estava devolvendo um object
+        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal()); // getPrincipal() para pegar o usuário logado / ALT + Enter Cast Usuário pois estava devolvendo um object
+
+        return ResponseEntity.ok(new DadosTokenJWT(tokenJWT)); // ALT + Enter Create Record, para devolver o token no padrão do DTO
     }
 }
