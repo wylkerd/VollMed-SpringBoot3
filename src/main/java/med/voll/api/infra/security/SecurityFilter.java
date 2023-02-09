@@ -28,8 +28,19 @@ public class SecurityFilter extends OncePerRequestFilter { // ALT + Enter implem
     /* Este é o método que o Spring vai chamar quando este filtro for executado */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        var tokenJWT = recuperarToken(request);
 
         // NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO, SE NÃO TIVER OUTRO ELE CHAMA O CONTROLLER CORRESPONDENTE
         filterChain.doFilter(request, response);
+    }
+
+    // Passamos aqui no método a request e ele nos devolve a String  do token
+    private String recuperarToken(HttpServletRequest request) {
+        var authorizationHeader = request.getHeader("Authorization"); // vai pegar o valor da várial Authorization que veio no Header da request
+        if (authorizationHeader == null) {
+            throw new RuntimeException("Token JWT não enviado no cabeçalho Authorization!");
+        }
+
+        return authorizationHeader.replace("Bearer ", "");
     }
 }
