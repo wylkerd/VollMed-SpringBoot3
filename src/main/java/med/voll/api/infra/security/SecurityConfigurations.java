@@ -2,6 +2,7 @@ package med.voll.api.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,11 +24,19 @@ public class SecurityConfigurations {
     @Bean // Serve para expor o retorno deste método ao Spring, para que devolva um objeto com esta configuração oo Spring automaticamente, Controller ou Classe Service
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*
-        * 1 - Desabilitando proteção contra ataques Cross-Site Request Forgery (CSRF), pois iremos utilizar JWT Token, que faz a proteção deste ataque
-        * 2 - sessionManagement() configura a autenticação para ser STATELESS (por padrão vem como stateful)
-        * */
+            * 1 - Desabilitando proteção contra ataques Cross-Site Request Forgery (CSRF), pois iremos utilizar JWT Token, que faz a proteção deste ataque
+            * 2 - sessionManagement() configura a autenticação para ser STATELESS (por padrão vem como stateful)
+            *
+            *
+            * Configurando também o Spring, para reconhecer se o usuário já esta logado/autenticado, mesmo ele enviando o token na requisição
+            * mantendo ainda o padrão stateless, mas agora permitindo que o Spring reconheça o usuário nas novas requests
+        */
+
         return http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeHttpRequests() // authorizeRequests(): Método para configurar o Controle de acesso
+                .requestMatchers(HttpMethod.POST,"/login").permitAll() // Deixando url de login publica, permitindo acesso sem token
+                .anyRequest().authenticated() // Obrigando qualquer outra requisição ser autenticada com o token JWT
                 .and().build();
     }
 

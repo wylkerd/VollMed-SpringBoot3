@@ -4,7 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import med.voll.api.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,26 +32,45 @@ public class SecurityFilter extends OncePerRequestFilter { // ALT + Enter implem
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UsuarioRepository repository;
+
     /* Este é o método que o Spring vai chamar quando este filtro for executado */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request); // ALT + Enter create method, para recuperação do token aqui
-        var subject = tokenService.getSubject(tokenJWT); // Fazendo a verificação do Token JWT no tokenService, se chegar o subject aqui, é por que o token está válido
 
-        
+        if (tokenJWT != null) {
+            /*
+            * Aqui fará a verificação do Token JWT no tokenService, se
+            * chegar o subject aqui, é por que o token está válido.
+            */
 
-        // * NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO, SE NÃO TIVER OUTRO ELE CHAMA O CONTROLLER CORRESPONDENTE
+            var subject = tokenService.getSubject(tokenJWT);
+            var usuario = repository.findByLogin(subject); // Se chegar até aqui, estaremos fornçando o Spring a considerar que o usuário está logado
+
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication); // Aqui o Spring passa a considerar o Usuário como logado no sistema
+        }
+
+
+        /* NECESSÁRIO PARA CHAMAR OS PRÓXIMOS FILTROS NA APLICAÇÃO E SEGUIR O FLUXO, SE NÃO TIVER OUTRO ELE CHAMA O CONTROLLER CORRESPONDENTE
+        *   Aqui o Spring faz a validação se o usuário está logado, conforme configurado no SecurityConfigurations
+        */
+
         filterChain.doFilter(request, response);
     }
 
     private String recuperarToken(HttpServletRequest request) {
         /* Passamos neste método a request, e ele nos devolve a String do token que está no cabeçalho
         Vai pegar o valor da váriavel Authorization que veio no Header da request */
+
         var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null) {
-            throw new RuntimeException("Token JWT não enviado no cabeçalho Authorization!");
+        if (authorizationHeader != null) {
+            return authorizationHeader.replace("Bearer ", "");
         }
 
-        return authorizationHeader.replace("Bearer ", "");
+        return null;
     }
 }
