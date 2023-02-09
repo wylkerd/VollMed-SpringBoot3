@@ -1,5 +1,6 @@
 package med.voll.api.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration // Anotação do Spring para Classe de Configuração
 @EnableWebSecurity // Anotação para indicar personalização nas configurações de segurança
 public class SecurityConfigurations {
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     /*
         O @Bean sever para exportar uma classe para o Spring, fazendo com que ele consiga carregá-la
@@ -37,7 +42,8 @@ public class SecurityConfigurations {
                 .and().authorizeHttpRequests() // authorizeRequests(): Método para configurar o Controle de acesso
                 .requestMatchers(HttpMethod.POST,"/login").permitAll() // Deixando url de login publica, permitindo acesso sem token
                 .anyRequest().authenticated() // Obrigando qualquer outra requisição ser autenticada com o token JWT
-                .and().build();
+                .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Mostrando ao Spring a ordem dos Filtros, 1º o nosso SecurityFilter, 2º o do Spring (UsernamePasswordAuthenticationFilter) que valida se o usuário está logado
+                .build();
     }
 
     @Bean // Estamos ensinando ao Spring neste método abaixo como ele injeta objetos AuthenticationManager

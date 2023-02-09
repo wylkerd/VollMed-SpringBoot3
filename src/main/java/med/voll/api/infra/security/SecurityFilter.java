@@ -50,7 +50,6 @@ public class SecurityFilter extends OncePerRequestFilter { // ALT + Enter implem
             var usuario = repository.findByLogin(subject); // Se chegar até aqui, estaremos fornçando o Spring a considerar que o usuário está logado
 
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-
             SecurityContextHolder.getContext().setAuthentication(authentication); // Aqui o Spring passa a considerar o Usuário como logado no sistema
         }
 
